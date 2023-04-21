@@ -1,18 +1,34 @@
-a bro who codes algorithm with you
+A bro who codes algorithm with you
 
 ---
 
-#### frontend
+#### Frontend
 
-t3 stack
+T3 stack
 
--   nextjs 13
--   tailwindcss
+-   NextJS 13
+-   Tailwind
 
-#### backend
+#### Backend
 
-home-cook ai model
+Home-cook AI model
 
--   fastapi
--   pycodegen
--   p-tuning v2
+-   FastAPI
+-   PyCodeGPT
+-   P-tuning v2
+-   AlphaCode Dataset
+-   Langchain
+-   Pinecone
+
+#### Progress
+
+-   [x] Simple UI
+-   [ ] Send code to backend
+-   [ ] Generate based only on PyCodeGPT LLM and return to frontend
+-   [ ] Prompt tuning that LLM (using P-tuning v2 and AlphaCode Dataset)
+-   [ ] Upgrade UI and apply new home-cook model
+-   [ ] Store all solutions and discussion into vector database (Pinecone, ...)
+-   [ ] Use Langchain and GPT to query from vector database
+-   [ ] Hoom cook my own Code to Text model and replace that to GPT model Langchain using above
+-   [ ] Upgrade UI/UX
+-   [ ] To the moon
