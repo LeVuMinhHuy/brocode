@@ -11,11 +11,12 @@
 
 you should have a [virtualenv](https://virtualenv.pypa.io/en/latest/), although it optional
 
-if you didn't install virtualenv, run only step 2
+if you didn't install virtualenv, run only step 3
 
 ```
 1. virtualenv backend
-2. ./scripts/run.sh
+2. source backend/bin/activate
+3. ./scripts/run.sh
 ```
 
 then open your `http://localhost:8000/docs`
