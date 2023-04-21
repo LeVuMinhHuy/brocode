@@ -1,4 +1,4 @@
-Using [T3 Stack](https://create.t3.gg/), shoutout [Theo](twitch.tv/Theo)
+Using [T3 Stack](https://create.t3.gg/), shoutout [Theo](https://twitch.tv/Theo)
 
 -   NextJS version 13
 -   Tailwind CSS
