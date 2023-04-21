@@ -1,17 +1,19 @@
+### intro
+
 a bro who codes algorithm with you
 
-(should i named him barney ?)
+---
 
-stack
+### stack
 
-frontend
+#### frontend
 
 t3 stack
 
 -   nextjs 13
 -   tailwindcss
 
-backend
+#### backend
 
 home-cook ai model
 
