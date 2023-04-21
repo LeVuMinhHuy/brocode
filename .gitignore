@@ -40,3 +40,11 @@ frontend/.vercel
 
 # typescript
 frontend/*.tsbuildinfo
+
+
+
+#### backend
+
+backend/backend/*
+backend/src/__pycache__/*
+backend/src/model/__pycache__/*

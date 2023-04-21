@@ -1,7 +1,52 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import { useEffect, useState } from "react";
+import { sendDataToApi, useDebounce } from "~/utils/clients";
 
 const Home: NextPage = () => {
+  const [code, setCode] = useState("");
+  const debouncedCode = useDebounce(code, 500);
+
+  useEffect(() => {
+    const handleTabKey = (e: KeyboardEvent) => {
+      if (e.key === "Tab") {
+        e.preventDefault();
+        const textarea = e.target as HTMLTextAreaElement;
+        const start = textarea.selectionStart || 0;
+        const end = textarea.selectionEnd || 0;
+        setCode(
+          textarea.value.substring(0, start) +
+            "\t" +
+            textarea.value.substring(end)
+        );
+        textarea.selectionStart = textarea.selectionEnd = start + 1;
+      }
+    };
+
+    document.addEventListener("keydown", handleTabKey);
+
+    return () => {
+      document.removeEventListener("keydown", handleTabKey);
+    };
+  }, []);
+
+  useEffect(() => {
+    const send = async (): Promise<Response | undefined> => {
+      try {
+        return await sendDataToApi(debouncedCode);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    const data = send();
+    console.log(data);
+  }, [debouncedCode]);
+
+  const handleCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setCode(e.target.value);
+  };
+
   return (
     <>
       <Head>
@@ -46,10 +91,14 @@ const Home: NextPage = () => {
             <div className="col-span-1">
               <div className="flex h-full max-w-lg flex-col gap-4 rounded-xl bg-white/10 p-4 text-white ">
                 <h3 className="text-2xl font-bold">Input →</h3>
-                <div className="text-lg">
-                  Just the basics - Everything you need to know to set up your
-                  database and authentication.
-                </div>
+                <textarea
+                  id="code"
+                  className="block h-full w-full rounded bg-gray-800 px-3 py-2 focus:outline-none"
+                  rows={10}
+                  placeholder="Enter your Python code here"
+                  value={code}
+                  onChange={handleCodeChange}
+                ></textarea>
               </div>
             </div>
           </div>
