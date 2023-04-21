@@ -1,10 +1,6 @@
-### intro
-
 a bro who codes algorithm with you
 
 ---
-
-### stack
 
 #### frontend
 
