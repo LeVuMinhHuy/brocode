@@ -10,7 +10,8 @@ TODO
 How to run
 
 you should have a [virtualenv](https://virtualenv.pypa.io/en/latest/), although it optinal
-if you didn't install virtualenv, go straigt to step 2
+
+if you didn't install virtualenv, run only step 2
 
 ```
 1. virtualenv backend
