@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from classes import Code, ModelData, GenerationData
 from generate import code_generation
+import uvicorn
 
 app = FastAPI()
 
@@ -23,4 +24,7 @@ def gen_code(code: Code):
     model_data = ModelData(model="Daoguang/PyCodeGPT")
     gen_data = GenerationData(model_data=model_data, prompt=code.data)
     return code_generation(gen_data)
+
+if __name__ == "__main__":
+  uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
 
