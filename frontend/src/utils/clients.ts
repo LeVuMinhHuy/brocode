@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import type { Code } from "~/types/code";
 
+console.log({ server: process.env.SERVER_HOST, port: process.env.SERVER_PORT });
+
 const server = `http://${process.env.SERVER_HOST || "localhost"}:${
   process.env.SERVER_PORT || "8000"
 }`;
