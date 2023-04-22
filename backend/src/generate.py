@@ -1,5 +1,5 @@
-from classes import GenerationData
-from model.codegen import CodeGenerationPipeline
+from src.classes import GenerationData
+from src.model.codegen import CodeGenerationPipeline
 
 def code_generation(data = GenerationData):
     model_pipeline = CodeGenerationPipeline(data.model_data)

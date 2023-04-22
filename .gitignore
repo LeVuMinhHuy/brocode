@@ -1,46 +1,24 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# frontend
 
-# dependencies
 frontend/node_modules
 frontend/.pnp
 frontend.pnp.js
-
-# testing
 frontend/coverage
-
-# database
 frontend/prisma/db.sqlite
 frontend/prisma/db.sqlite-journal
-
-# next.js
 frontend/.next/
 frontend/out/
 frontendnext-env.d.ts
-
-# production
 frontend/build
-
-# misc
 frontend/.DS_Store
 frontend/*.pem
-
-# debug
 frontend/npm-debug.log*
 frontend/yarn-debug.log*
 frontend/yarn-error.log*
 frontend/.pnpm-debug.log*
-
-# local env files
-# do not commit any .env files to git, except for the .env.example file. https://create.t3.gg/en/usage/env-variables#using-environment-variables
-frontend/.env
 frontend/.env*.local
-
-# vercel
 frontend/.vercel
-
-# typescript
 frontend/*.tsbuildinfo
-
 
 
 #### backend
@@ -48,3 +26,84 @@ frontend/*.tsbuildinfo
 backend/backend/*
 backend/src/__pycache__/*
 backend/src/model/__pycache__/*
+backend/.vercel
+backend/.now
+backend/.vercel
+backend/__pycache__/
+backend/*.py[cod]
+backend/*$py.class
+backend/*.so
+backend/.Python
+backend/build/
+backend/develop-eggs/
+backend/dist/
+backend/downloads/
+backend/eggs/
+backend/.eggs/
+backend/lib/
+backend/lib64/
+backend/parts/
+backend/sdist/
+backend/var/
+backend/wheels/
+backend/pip-wheel-metadata/
+backend/share/python-wheels/
+backend/*.egg-info/
+backend/.installed.cfg
+backend/*.egg
+backend/MANIFEST
+backend/*.manifest
+backend/*.spec
+backend/pip-log.txt
+backend/pip-delete-this-directory.txt
+backend/htmlcov/
+backend/.tox/
+backend/.nox/
+backend/.coverage
+backend/.coverage.*
+backend/.cache
+backend/nosetests.xml
+backend/coverage.xml
+backend/*.cover
+backend/*.py,cover
+backend/.hypothesis/
+backend/.pytest_cache/
+backend/pytestdebug.log
+backend/*.mo
+backend/*.pot
+backend/*.log
+backend/local_settings.py
+backend/db.sqlite3
+backend/db.sqlite3-journal
+backend/instance/
+backend/.webassets-cache
+backend/.scrapy
+backend/docs/_build/
+backend/doc/_build/
+backend/target/
+backend/.ipynb_checkpoints
+backend/profile_default/
+backend/ipython_config.py
+backend/.python-version
+backend/__pypackages__/
+backend/celerybeat-schedule
+backend/celerybeat.pid
+backend/*.sage.py
+backend/.env
+backend/.venv
+backend/env/
+backend/venv/
+backend/ENV/
+backend/env.bak/
+backend/venv.bak/
+backend/pythonenv*
+backend/.spyderproject
+backend/.spyproject
+backend/.ropeproject
+backend//site
+backend/.mypy_cache/
+backend/.dmypy.json
+backend/dmypy.json
+backend/.pyre/
+backend/.pytype/
+backend/.prof
