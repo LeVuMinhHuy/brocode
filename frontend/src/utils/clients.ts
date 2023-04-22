@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Code } from "~/types/code";
 
-console.log({
-  server: process.env.NEXT_PUBLIC_SERVER_HOST,
-  port: process.env.NEXT_PUBLIC_SERVER_PORT,
-});
-
-const server = `http://${process.env.NEXT_PUBLIC_SERVER_HOST || "localhost"}:${
+const server = `${process.env.NEXT_PUBLIC_SERVER_HOST || "http://localhost"}:${
   process.env.NEXT_PUBLIC_SERVER_PORT || "8000"
 }`;
 
