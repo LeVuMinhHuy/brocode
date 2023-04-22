@@ -1,15 +1,17 @@
 {
+  "version": 2,
+  "installCommand": "python3 -m venv backend  && source backend/bin/activate && pip3 install -r requirements.txt",
   "devCommand": "uvicorn src.main:app --host 0.0.0.0 --port 8000",
   "builds": [
     {
-      "src": "src/main.py",
+      "src": "/src/main.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "src/index.py"
+      "dest": "src/main.py"
     }
   ]
 }
