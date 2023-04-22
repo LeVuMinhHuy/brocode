@@ -3,7 +3,8 @@ from model.codegen import CodeGenerationPipeline
 
 def code_generation(data = GenerationData):
     model_pipeline = CodeGenerationPipeline(data.model_data)
-    model_pipeline.load_generation_pipe()
+    pipe = model_pipeline.load_generation_pipe()
+
     
     gen_kwargs = {
         "do_sample": True,
@@ -12,11 +13,10 @@ def code_generation(data = GenerationData):
         "top_p": 0.9,
         "top_k": 0,
         "pad_token_id": pipe.tokenizer.pad_token_id if pipe.tokenizer.pad_token_id else pipe.tokenizer.eos_token_id,
-        "eos_token_id": pipe.tokenizer.eos_token_id,
-        "num_completions": 1
+        "eos_token_id": pipe.tokenizer.eos_token_id
     }
     
-    code_gens = model_pipeline.run_code_generation(data.prompt, **gen_kwargs)
+    code_gens = model_pipeline.run_code_generation(pipe, data.prompt, num_completions = 1, **gen_kwargs)
 
     if code_gens:
         return code_gens[0]

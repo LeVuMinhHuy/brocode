@@ -26,17 +26,17 @@ class CodeGenerationPipeline:
             self.data.model , len(tokenizer), tokenizer.eos_token_id, self.data.gpu_device)
         )
     
-        self.pipe = pipe
+        return pipe
     
-    def extract_function_block(string):
+    def extract_function_block(self, string):
         return re.split("\nclass|\ndef|\n#|\n@|\nprint|\nif", string)[0].rstrip()
     
-    def run_code_generation(self, prompt, **gen_kwargs):
+    def run_code_generation(self, pipe, prompt, num_completions = 1, **gen_kwargs):
         set_seed(123)
-    
-        code_gens = self.pipe(prompt,
-            num_return_sequences= kwargs.get('num_completions'),
+
+        code_gens = pipe(prompt,
+            num_return_sequences = num_completions,
             **gen_kwargs
         )
     
-        return [extract_function_block(code_gen["generated_text"][len(prompt):]) for code_gen in code_gens]
+        return [self.extract_function_block(code_gen["generated_text"][len(prompt):]) for code_gen in code_gens]
