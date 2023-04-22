@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import type { Code } from "~/types/code";
 
-console.log({ server: process.env.SERVER_HOST, port: process.env.SERVER_PORT });
+console.log({
+  server: process.env.NEXT_PUBLIC_SERVER_HOST,
+  port: process.env.NEXT_PUBLIC_SERVER_PORT,
+});
 
-const server = `http://${process.env.SERVER_HOST || "localhost"}:${
-  process.env.SERVER_PORT || "8000"
+const server = `http://${process.env.NEXT_PUBLIC_SERVER_HOST || "localhost"}:${
+  process.env.NEXT_PUBLIC_SERVER_PORT || "8000"
 }`;
 
 export const useDebounce = (value: string, delay: number) => {
