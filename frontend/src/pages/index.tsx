@@ -1,11 +1,15 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { Language } from "~/types/code";
 import { sendDataToApi, useDebounce } from "~/utils/clients";
 
 const Home: NextPage = () => {
-  const [code, setCode] = useState("");
-  const debouncedCode = useDebounce(code, 500);
+  const [code, setCode] = useState<string>("");
+  const [generating, setGenerating] = useState<boolean>(false);
+  const [codeGenerated, setCodeGenerated] = useState<string>("");
+  const debouncedCode = useDebounce(code, 1000);
+  const language = Language.Python; // just for now
 
   useEffect(() => {
     const handleTabKey = (e: KeyboardEvent) => {
@@ -30,18 +34,33 @@ const Home: NextPage = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const send = async (): Promise<Response | undefined> => {
+  const generate = useCallback(() => {
+    const send = async (): Promise<void> => {
       try {
-        return await sendDataToApi(debouncedCode);
+        setGenerating(true);
+        const response = await sendDataToApi({ data: debouncedCode, language });
+
+        if (response) {
+          const firstLine = response.split("\n")?.[0] || "Nothing";
+          setCodeGenerated(firstLine);
+          setGenerating(false);
+        } else {
+          setCodeGenerated("Nothing more");
+          setGenerating(false);
+        }
       } catch (error) {
         console.error("Error:", error);
       }
     };
 
-    const data = send();
-    console.log(data);
-  }, [debouncedCode]);
+    void send();
+  }, [debouncedCode, language, setCodeGenerated, setGenerating]);
+
+  useEffect(() => {
+    if (!!debouncedCode) {
+      generate();
+    }
+  }, [generate, debouncedCode]);
 
   const handleCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCode(e.target.value);
@@ -66,7 +85,7 @@ const Home: NextPage = () => {
             <div className="col-span-1">
               <div className="mb-4 flex max-h-60 max-w-lg flex-col gap-4 rounded-xl bg-white/10 p-4 text-white ">
                 <h3 className="sticky top-0 text-2xl font-bold">Problem</h3>
-                <div className="overflow-scroll">
+                <div className="overflow-y-auto">
                   <div className="rounded-md bg-gray-800 p-4">
                     <code className="font-mono text-sm">
                       Input: nums = [2,7,11,15], target = 9<br></br>
@@ -82,15 +101,33 @@ const Home: NextPage = () => {
               </div>
               <div className="flex max-w-lg flex-col gap-4 rounded-xl bg-white/10 p-4 text-white ">
                 <h3 className="text-2xl font-bold">Code generation</h3>
-                <div className="text-lg">
-                  Learn more about Create T3 App, the libraries it uses, and how
-                  to deploy it.
+                <div className="overflow-y-auto">
+                  <div className="rounded-md bg-gray-800 p-4">
+                    {generating ? (
+                      <div className="flex items-center justify-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-white"></div>
+                      </div>
+                    ) : (
+                      <code className="whitespace-pre-wrap font-mono text-sm">
+                        {codeGenerated}
+                      </code>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
             <div className="col-span-1">
               <div className="flex h-full max-w-lg flex-col gap-4 rounded-xl bg-white/10 p-4 text-white ">
-                <h3 className="text-2xl font-bold">Input →</h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-2xl font-bold">Input →</h3>
+
+                  <button
+                    onClick={generate}
+                    className="text-gray-500 hover:text-gray-100 focus:outline-none"
+                  >
+                    regen
+                  </button>
+                </div>
                 <textarea
                   id="code"
                   className="block h-full w-full rounded bg-gray-800 px-3 py-2 focus:outline-none"

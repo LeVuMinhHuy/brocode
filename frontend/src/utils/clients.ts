@@ -1,4 +1,9 @@
 import { useEffect, useState } from "react";
+import type { Code } from "~/types/code";
+
+const server = `http://${process.env.REACT_APP_SERVER_HOST || "localhost"}:${
+  process.env.REACT_APP_SERVER_PORT || "8000"
+}`;
 
 export const useDebounce = (value: string, delay: number) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -11,15 +16,19 @@ export const useDebounce = (value: string, delay: number) => {
   return debouncedValue;
 };
 
-export const sendDataToApi = async (data: string) => {
+export const sendDataToApi = async (
+  data: Code
+): Promise<string | undefined> => {
   try {
-    return await fetch("https://api.example.com/", {
+    const response = await fetch(`${server}/gen/code`, {
       method: "POST",
-      body: JSON.stringify({ code: data }),
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify(data),
     });
+
+    return (await response.json()) as string;
   } catch (error) {
     console.error("Error:", error);
   }
