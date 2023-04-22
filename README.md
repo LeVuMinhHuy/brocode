@@ -1,5 +1,7 @@
 A bro who codes algorithm with you
 
+![](./pics/01.png)
+
 ---
 
 #### Frontend
