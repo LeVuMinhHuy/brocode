@@ -5,7 +5,7 @@ from tqdm import tqdm
 from transformers import pipeline, set_seed
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from transformers.pipelines.base import Pipeline
-from src.classes import ModelData
+from ..classes import ModelData
 
 class CodeGenerationPipeline:
     def __init__(self, data = ModelData):

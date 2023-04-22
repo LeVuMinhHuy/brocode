@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.classes import Code, ModelData, GenerationData
-from src.generate import code_generation
+from .classes import Code, ModelData, GenerationData
+from .generate import code_generation
 
 app = FastAPI()
 
