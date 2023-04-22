@@ -1,6 +1,6 @@
 A bro who codes algorithm with you
 
-![](./pics/01.png)
+![Hello world](./.pics/01.png)
 
 ---
 
@@ -25,8 +25,9 @@ Home-cook AI model
 #### Progress
 
 -   [x] Simple UI
--   [ ] Send code to backend
--   [ ] Generate based only on PyCodeGPT LLM and return to frontend
+-   [x] Send code to backend
+-   [x] Generate based only on PyCodeGPT LLM and return to frontend
+-   [ ] Deploy to vercel
 -   [ ] Prompt tuning that LLM (using P-tuning v2 and AlphaCode Dataset)
 -   [ ] Upgrade UI and apply new home-cook model
 -   [ ] Store all solutions and discussion into vector database (Pinecone, ...)
