@@ -107,3 +107,4 @@ backend/dmypy.json
 backend/.pyre/
 backend/.pytype/
 backend/.prof
+backend/.space/*
