@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import type { Code } from "~/types/code";
 
 const server = `${process.env.NEXT_PUBLIC_SERVER_HOST || "http://localhost"}:${
-  process.env.NEXT_PUBLIC_SERVER_PORT || "8000"
+  process.env.NEXT_PUBLIC_SERVER_PORT || ""
 }`;
 
 export const useDebounce = (value: string, delay: number) => {
