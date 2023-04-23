@@ -1,5 +1,4 @@
 import os
-import sys
 
 from enum import Enum
 from pydantic import BaseModel, BaseSettings
