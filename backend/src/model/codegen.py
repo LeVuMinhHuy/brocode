@@ -19,8 +19,8 @@ class CodeGenerationPipeline:
             'text-generation',
             model=model,
             tokenizer=tokenizer,
-            device="cpu" # Have no CUDA installed https://discuss.huggingface.co/t/is-transformers-using-gpu-by-default/8500
-        )
+            device=self.data.gpu_device 
+          )
     
         print("load generation pipeline from {} over, vocab size = {}, eos id = {}, gpu device = {}.".format(
             self.data.model , len(tokenizer), tokenizer.eos_token_id, self.data.gpu_device)
