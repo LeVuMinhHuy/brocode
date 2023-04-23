@@ -2,14 +2,24 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { useCallback, useEffect, useState } from "react";
 import { Language } from "~/types/code";
-import { sendDataToApi, useDebounce } from "~/utils/clients";
+import { healthCheckApi, sendDataToApi, useDebounce } from "~/utils/clients";
 
 const Home: NextPage = () => {
   const [code, setCode] = useState<string>("");
   const [generating, setGenerating] = useState<boolean>(false);
   const [codeGenerated, setCodeGenerated] = useState<string>("");
+  const [checkServer, setCheckServer] = useState<boolean>(true);
   const debouncedCode = useDebounce(code, 1000);
   const language = Language.Python; // just for now
+
+  useEffect(() => {
+    const check = async () => {
+      const result = await healthCheckApi();
+      setCheckServer(!!result);
+    };
+
+    void check();
+  }, []);
 
   useEffect(() => {
     const handleTabKey = (e: KeyboardEvent) => {
@@ -81,6 +91,13 @@ const Home: NextPage = () => {
           <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
             <span className="text-[hsl(280,100%,70%)]">Bro</span>code
           </h1>
+
+          {checkServer ? (
+            <p className={"text-green-400"}>{"Server status: Online"}</p>
+          ) : (
+            <p className={"text-red-400"}>{"Server status: Offline"}</p>
+          )}
+
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
             <div className="col-span-1">
               <div className="mb-4 flex max-h-60 max-w-lg flex-col gap-4 rounded-xl bg-white/10 p-4 text-white ">

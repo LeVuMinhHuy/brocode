@@ -16,6 +16,22 @@ export const useDebounce = (value: string, delay: number) => {
   return debouncedValue;
 };
 
+export const healthCheckApi = async (): Promise<boolean | undefined> => {
+  try {
+    const response = await fetch(`${server}`, {
+      method: "GET",
+    });
+
+    const data = (await response.json()) as string;
+
+    console.log({ data });
+
+    return true;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
 export const sendDataToApi = async (
   data: Code
 ): Promise<string | undefined> => {
