@@ -1,6 +1,6 @@
 A bro who codes algorithm with you
 
-![Hello world](./.pics/02.png)
+![Hello world](./.pics/04.png)
 
 ---
 
