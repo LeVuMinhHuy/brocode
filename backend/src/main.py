@@ -1,5 +1,4 @@
 import sys
-import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -38,7 +37,6 @@ async def read_root():
 
 @app.post("/gen/code")
 async def gen_code(code: Code):
-    gpu = os.environ.get("USE_GPU", "False") == "True"
-    model_data = ModelData(model="Daoguang/PyCodeGPT", gpu_device=int(gpu))
+    model_data = ModelData(model="Daoguang/PyCodeGPT")
     gen_data = GenerationData(model_data=model_data, prompt=code.data)
     return code_generation(gen_data)

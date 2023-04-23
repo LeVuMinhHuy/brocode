@@ -19,7 +19,6 @@ class Code(BaseModel):
 @dataclass
 class ModelData:
     model: str
-    gpu_device: int = 0
 
 @dataclass
 class GenerationData:

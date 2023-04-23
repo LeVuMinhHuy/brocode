@@ -19,13 +19,9 @@ class CodeGenerationPipeline:
             'text-generation',
             model=model,
             tokenizer=tokenizer,
-            device=self.data.gpu_device 
+            device_map="auto"
           )
-    
-        print("load generation pipeline from {} over, vocab size = {}, eos id = {}, gpu device = {}.".format(
-            self.data.model , len(tokenizer), tokenizer.eos_token_id, self.data.gpu_device)
-        )
-    
+
         return pipe
     
     def extract_function_block(self, string):
