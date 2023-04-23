@@ -24,6 +24,8 @@ if settings.USE_NGROK:
     port = sys.argv[sys.argv.index("--port") + 1] if "--port" in sys.argv else 8000
 
     public_url = ngrok.connect(port).public_url
+
+    print(public_url)
     logger.info("ngrok tunnel \"{}\" -> \"http://127.0.0.1:{}\"".format(public_url, port))
 
     settings.BASE_URL = public_url
