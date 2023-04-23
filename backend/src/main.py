@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .classes import Code, ModelData, GenerationData
+from .classes import Code, ModelData, GenerationData, Settings
 from .generate import code_generation
 
 app = FastAPI()
@@ -12,6 +12,18 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+settings = Settings()
+
+if settings.USE_NGROK:
+    from pyngrok import ngrok
+
+    port = sys.argv[sys.argv.index("--port") + 1] if "--port" in sys.argv else 8000
+
+    public_url = ngrok.connect(port).public_url
+    logger.info("ngrok tunnel \"{}\" -> \"http://127.0.0.1:{}\"".format(public_url, port))
+
+    settings.BASE_URL = public_url
 
 @app.get("/")
 async def read_root():
