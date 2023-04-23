@@ -2,6 +2,7 @@ import sys
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.logger import logger
 from .classes import Code, ModelData, GenerationData, Settings
 from .generate import code_generation
 
