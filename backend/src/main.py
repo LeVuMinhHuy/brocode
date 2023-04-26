@@ -37,6 +37,6 @@ async def read_root():
 
 @app.post("/gen/code")
 async def gen_code(code: Code):
-    model_data = ModelData(model="Daoguang/PyCodeGPT")
+    model_data = ModelData(model="mhhmm/codegen-6B-lora")
     gen_data = GenerationData(model_data=model_data, prompt=code.data)
     return code_generation(gen_data)

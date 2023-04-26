@@ -15,6 +15,10 @@ class Language(str, Enum):
 class Code(BaseModel):
     data: str
     language: Language
+    temperature: float = 0.8
+    max_new_tokens: int = 70
+    top_p: float = 0.9
+    top_k: int = 0
 
 @dataclass
 class ModelData:

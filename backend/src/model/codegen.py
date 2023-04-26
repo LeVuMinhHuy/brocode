@@ -1,38 +1,25 @@
-import os
-import re
-import argparse
-from tqdm import tqdm
-from transformers import pipeline, set_seed
-from transformers import AutoTokenizer, AutoModelForCausalLM
-from transformers.pipelines.base import Pipeline
+import torch
+from peft import PeftModel, PeftConfig
+from transformers import AutoModelForCausalLM, AutoTokenizer
 from ..classes import ModelData
 
 class CodeGenerationPipeline:
     def __init__(self, data = ModelData):
         self.data = data
 
-    def load_generation_pipe(self):
-        model = AutoModelForCausalLM.from_pretrained(self.data.model)
-        tokenizer = AutoTokenizer.from_pretrained(self.data.model)
+    def load_model(self):
+        config = PeftConfig.from_pretrained(self.data.model)
+        model = AutoModelForCausalLM.from_pretrained(config.base_model_name_or_path, return_dict=True, load_in_8bit=True, device_map='auto')
+        tokenizer = AutoTokenizer.from_pretrained(config.base_model_name_or_path)
     
-        pipe = pipeline(
-            'text-generation',
-            model=model,
-            tokenizer=tokenizer,
-            device_map="auto"
-          )
+        model = PeftModel.from_pretrained(model, self.data.model)
 
-        return pipe
-    
-    def extract_function_block(self, string):
-        return re.split("\nclass|\ndef|\n#|\n@|\nprint|\nif", string)[0].rstrip()
-    
-    def run_code_generation(self, pipe, prompt, num_completions = 1, **gen_kwargs):
-        set_seed(123)
+        return model
 
-        code_gens = pipe(prompt,
-            num_return_sequences = num_completions,
-            **gen_kwargs
-        )
-    
-        return [self.extract_function_block(code_gen["generated_text"][len(prompt):]) for code_gen in code_gens]
+    def code_gen(self, prompt: str, **kwargs):
+        batch = tokenizer(prompt, return_tensors='pt')
+        
+        with torch.cuda.amp.autocast():
+            output_tokens = model.generate(**batch, **kwargs)
+        
+        return tokenizer.decode(output_tokens[0], skip_special_tokens=True)
