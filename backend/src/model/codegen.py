@@ -18,17 +18,17 @@ class CodeGenerationPipeline:
                 offload_folder="./offload"
         )
 
-        tokenizer = AutoTokenizer.from_pretrained(config.base_model_name_or_path)
+        self.tokenizer = AutoTokenizer.from_pretrained(config.base_model_name_or_path)
     
         model = PeftModel.from_pretrained(model, self.data.model)
 
         self.model = model
 
     def generate(self, prompt: str, **kwargs):
-        batch = tokenizer(prompt, return_tensors='pt')
+        batch = self.tokenizer(prompt, return_tensors='pt')
         
         with torch.cuda.amp.autocast():
             output_tokens = self.model.generate(**batch, **kwargs)
         
-        return tokenizer.decode(output_tokens[0], skip_special_tokens=True)
+        return self.tokenizer.decode(output_tokens[0], skip_special_tokens=True)
 
