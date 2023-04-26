@@ -24,7 +24,7 @@ class CodeGenerationPipeline:
 
         self.model = model
 
-    def code_gen(self, prompt: str, **kwargs):
+    def generate(self, prompt: str, **kwargs):
         batch = tokenizer(prompt, return_tensors='pt')
         
         with torch.cuda.amp.autocast():
