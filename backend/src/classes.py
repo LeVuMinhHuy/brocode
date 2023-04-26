@@ -24,7 +24,6 @@ class Code(BaseModel):
 class ModelData:
     model: str
 
-@dataclass
-class GenerationData:
-    model_data: ModelData
-    prompt: str
+#@dataclass
+#class GenerationData:
+#    model_data: ModelData

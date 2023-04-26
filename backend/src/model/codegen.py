@@ -9,17 +9,26 @@ class CodeGenerationPipeline:
 
     def load_model(self):
         config = PeftConfig.from_pretrained(self.data.model)
-        model = AutoModelForCausalLM.from_pretrained(config.base_model_name_or_path, return_dict=True, load_in_8bit=True, device_map='auto')
+
+        model = AutoModelForCausalLM.from_pretrained(
+                config.base_model_name_or_path, 
+                return_dict=True, 
+                load_in_8bit=False, 
+                device_map="auto",
+                offload_folder="./offload"
+        )
+
         tokenizer = AutoTokenizer.from_pretrained(config.base_model_name_or_path)
     
         model = PeftModel.from_pretrained(model, self.data.model)
 
-        return model
+        self.model = model
 
     def code_gen(self, prompt: str, **kwargs):
         batch = tokenizer(prompt, return_tensors='pt')
         
         with torch.cuda.amp.autocast():
-            output_tokens = model.generate(**batch, **kwargs)
+            output_tokens = self.model.generate(**batch, **kwargs)
         
         return tokenizer.decode(output_tokens[0], skip_special_tokens=True)
+
