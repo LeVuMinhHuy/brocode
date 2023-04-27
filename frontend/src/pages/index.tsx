@@ -1,6 +1,8 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { useCallback, useEffect, useState } from "react";
+import { remark } from "remark";
+import html from "remark-html";
 import { Language } from "~/types/code";
 import { healthCheckApi, sendDataToApi, useDebounce } from "~/utils/clients";
 
@@ -9,7 +11,12 @@ const Home: NextPage = () => {
   const [generating, setGenerating] = useState<boolean>(false);
   const [codeGenerated, setCodeGenerated] = useState<string>("");
   const [checkServer, setCheckServer] = useState<boolean>(true);
-  const debouncedCode = useDebounce(code, 1000);
+  const [problem, setProblem] = useState<string>("# Generate two sum solution");
+  const [htmlProblem, setHtmlProblem] = useState<string>("");
+  const [isUserQuestion, setIsUserQuestion] = useState<boolean>(false);
+  const [question, setQuestion] = useState<string>("");
+
+  const debouncedQuestion = useDebounce(question, 2000);
   const language = Language.Python; // just for now
 
   useEffect(() => {
@@ -48,11 +55,14 @@ const Home: NextPage = () => {
     const send = async (): Promise<void> => {
       try {
         setGenerating(true);
-        const response = await sendDataToApi({ data: debouncedCode, language });
+        const response = await sendDataToApi({
+          data: debouncedQuestion,
+          language,
+        });
 
         if (response) {
-          const firstLine = response.split("\n")?.[0] || "Nothing";
-          setCodeGenerated(firstLine);
+          const code = response || "Nothing";
+          setCodeGenerated(code);
           setGenerating(false);
         } else {
           setCodeGenerated("Nothing more");
@@ -64,13 +74,39 @@ const Home: NextPage = () => {
     };
 
     void send();
-  }, [debouncedCode, language, setCodeGenerated, setGenerating]);
+  }, [debouncedQuestion, language, setCodeGenerated, setGenerating]);
 
   useEffect(() => {
-    if (!!debouncedCode) {
+    if (!!debouncedQuestion) {
       generate();
     }
-  }, [generate, debouncedCode]);
+  }, [generate, debouncedQuestion]);
+
+  useEffect(() => {
+    const getProblem = async () => {
+      const response = await fetch("/leetcode-solutions.json");
+      const problems = (await response.json()) as Record<string, string>[];
+
+      if (problems && !!problems.length) {
+        const random_id = Math.floor(Math.random() * problems.length);
+        const randomProblem: string | undefined = problems.find(
+          (item) => item.id === String(random_id)
+        )?.problem_only;
+
+        if (randomProblem) {
+          const htmlProblem = remark().use(html).processSync(randomProblem);
+
+          setHtmlProblem(htmlProblem.toString().replace(/\n/g, "<br>"));
+        }
+      }
+    };
+
+    void getProblem();
+  }, [setProblem]);
+
+  const handleInputQuestion = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setQuestion(e.target.value);
+  };
 
   const handleCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCode(e.target.value);
@@ -100,36 +136,41 @@ const Home: NextPage = () => {
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
             <div className="col-span-1">
-              <div className="mb-4 flex max-h-60 max-w-lg flex-col gap-4 rounded-xl bg-white/10 p-4 text-white ">
-                <h3 className="sticky top-0 text-2xl font-bold">Problem</h3>
-                <div className="overflow-y-auto">
-                  <div className="rounded-md bg-gray-800 p-4">
-                    <code className="font-mono text-sm">
-                      Input: nums = [2,7,11,15], target = 9<br></br>
-                      Output: [0,1]
-                      <br></br>
-                      <br></br>
-                      Explanation:
-                      <br></br>
-                      Because nums[0] + nums[1] == 9, we return [0, 1].
-                    </code>
-                  </div>
+              <div className="mb-4 flex h-full max-w-lg flex-col gap-4 rounded-xl bg-white/10 p-4 text-white ">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-2xl font-bold">Problem</h3>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsUserQuestion((prev: boolean) => !prev);
+                    }}
+                    className="mb-2 rounded-lg bg-purple-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
+                  >
+                    {isUserQuestion ? "Database" : "New"}
+                  </button>
                 </div>
-              </div>
-              <div className="flex max-w-lg flex-col gap-4 rounded-xl bg-white/10 p-4 text-white ">
-                <h3 className="text-2xl font-bold">Code generation</h3>
-                <div className="overflow-y-auto">
-                  <div className="rounded-md bg-gray-800 p-4">
-                    {generating ? (
-                      <div className="flex items-center justify-center">
-                        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-white"></div>
+                <div className="overflow-y-auto	">
+                  {isUserQuestion ? (
+                    <>
+                      <textarea
+                        id="question"
+                        className="w-128  bg-gray-800 px-3 py-2 font-mono text-sm focus:outline-none"
+                        rows={10}
+                        placeholder="Enter your own challenge here"
+                        value={question}
+                        onChange={handleInputQuestion}
+                      ></textarea>
+                    </>
+                  ) : (
+                    <>
+                      <div className="rounded-md bg-gray-800 p-4">
+                        <code className="font-mono text-sm"></code>
+                        <div
+                          dangerouslySetInnerHTML={{ __html: htmlProblem }}
+                        />
                       </div>
-                    ) : (
-                      <code className="whitespace-pre-wrap font-mono text-sm">
-                        {codeGenerated}
-                      </code>
-                    )}
-                  </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -137,12 +178,11 @@ const Home: NextPage = () => {
               <div className="flex h-full max-w-lg flex-col gap-4 rounded-xl bg-white/10 p-4 text-white ">
                 <div className="flex items-center justify-between">
                   <h3 className="text-2xl font-bold">Input →</h3>
-
                   <button
-                    onClick={generate}
-                    className="text-gray-500 hover:text-gray-100 focus:outline-none"
+                    type="button"
+                    className="mb-2 rounded-lg bg-purple-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
                   >
-                    regen
+                    Re-generate
                   </button>
                 </div>
                 <textarea
@@ -153,6 +193,9 @@ const Home: NextPage = () => {
                   value={code}
                   onChange={handleCodeChange}
                 ></textarea>
+                <div className="rounded-md bg-gray-800 p-4">
+                  <code className="font-mono text-sm">{"hehe"}</code>
+                </div>
               </div>
             </div>
           </div>
