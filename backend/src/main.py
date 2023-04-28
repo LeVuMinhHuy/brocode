@@ -40,4 +40,4 @@ async def read_root():
 
 @app.post("/gen/code")
 async def gen_code(code: Code):
-    return process(prompt=code.data, model_pipeline=model_pipeline)
+    return process(prompt=code.data, model_pipeline=model_pipeline, continue_count=code.continue_count)

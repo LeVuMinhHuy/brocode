@@ -9,16 +9,16 @@ def init_model(model_data = ModelData):
 
     return model_pipeline
 
-def process(prompt = str, model_pipeline = CodeGenerationPipeline):
+def process(prompt = str, model_pipeline = CodeGenerationPipeline, continue_count = int):
     gen_kwargs = {
     #    "temperature": model_pipeline.data.temperature,
-        "max_new_tokens": 200,
+        "max_new_tokens": 80 + continue_count * 10,
     #    "top_p": model_pipeline.data.top_p,
     #    "top_k": model_pipeline.data.top_k,
     }
 
     sum_kwargs = {
-        "max_new_tokens": 100,
+        "max_new_tokens": 36,
     }
     
     code_gen = model_pipeline.generate(prompt, **gen_kwargs)

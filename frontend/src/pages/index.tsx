@@ -50,31 +50,37 @@ const Home: NextPage = () => {
       const send = async (): Promise<void> => {
         try {
           setGenerating(true);
-          console.log(prefix || INIT_DATA.generateCodePrompt);
+
+          const commentProblem = `# ${problem.replace(/\n/g, "\n#")}`;
+          const commentQuestion = `# ${question.replace(/\n/g, "\n#")}`;
+
+          const convertCodePrompt = codePrompt
+            .replace(/<br>/g, "\n")
+            .replace(/    /g, "\t");
 
           const response: ResponseData | undefined = await sendDataToApi({
-            data: `${isUserQuestion ? question : problem} \n ${
+            data: `${isUserQuestion ? commentQuestion : commentProblem} \n ${
               INIT_DATA.generateInfoPrompt
-            } \n ${prefix || codePrompt}`,
+            } \n ${prefix || convertCodePrompt}`,
             language,
           });
 
           if (response) {
-            console.log({ response });
-
             const codeResponse = response.code;
             const summaryResponse = response.summary;
 
             if (summaryResponse) {
-              setSummaryGenerated(summaryResponse);
+              setSummaryGenerated(
+                summaryResponse.split(".")?.[0] || summaryResponse
+              );
             }
 
             const filteredResponse = codeResponse.split(
-              INIT_DATA.generateCodePrompt
+              prefix || convertCodePrompt
             )[1];
 
             const prefixFilterResponse = filteredResponse
-              ? `${INIT_DATA.generateCodePrompt} ${filteredResponse}`
+              ? `${prefix || convertCodePrompt} ${filteredResponse}`
               : null;
 
             const htmlCodeGenerated = prefixFilterResponse
@@ -97,7 +103,7 @@ const Home: NextPage = () => {
       void send();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [language, setCodeGenerated, setGenerating, problem]
+    [language, setCodeGenerated, setGenerating, problem, codePrompt]
   );
 
   const newProblem = useCallback(async () => {
@@ -265,7 +271,7 @@ const Home: NextPage = () => {
 
                 <textarea
                   id="question"
-                  className="h-32 w-full rounded-md bg-gray-800 px-3 py-2 font-mono text-sm focus:outline-none"
+                  className="h-24 w-full rounded-md bg-gray-800 px-3 py-2 font-mono text-sm focus:outline-none"
                   rows={10}
                   placeholder="# Prompt"
                   value={codePrompt}

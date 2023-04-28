@@ -15,6 +15,7 @@ class Language(str, Enum):
 class Code(BaseModel):
     data: str
     language: Language
+    continue_count: int
     #temperature: float = 0.8
     #max_new_tokens: int = 70
     #top_p: float = 0.9
