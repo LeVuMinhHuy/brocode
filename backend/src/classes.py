@@ -22,7 +22,8 @@ class Code(BaseModel):
 
 @dataclass
 class ModelData:
-    model: str
+    model_generate: str
+    model_summarize: str
     #temperature: float
     #max_new_tokens: int
     #top_p: float

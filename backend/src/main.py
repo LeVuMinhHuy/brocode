@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.logger import logger
 from .classes import Code, ModelData, Settings
-from .generate import code_generation, init_model
+from .generate import process, init_model
 
 app = FastAPI()
 
@@ -31,7 +31,7 @@ if settings.USE_NGROK:
 
     settings.BASE_URL = public_url
 
-model_data = ModelData(model="mhhmm/codegen-2B-lora")
+model_data = ModelData(model_generate="mhhmm/codegen-2B-lora", model_summarize="mhhmm/codeT5-python-sum")
 model_pipeline = init_model(model_data)
 
 @app.get("/")
@@ -40,4 +40,4 @@ async def read_root():
 
 @app.post("/gen/code")
 async def gen_code(code: Code):
-    return code_generation(prompt=code.data, model_pipeline=model_pipeline)
+    return process(prompt=code.data, model_pipeline=model_pipeline)

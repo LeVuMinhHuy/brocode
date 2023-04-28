@@ -3,28 +3,26 @@ from .classes import ModelData
 
 def init_model(model_data = ModelData):
     model_pipeline = CodeGenerationPipeline(model_data)
-    model_pipeline.load_model()
+
+    model_pipeline.load_model_generate()
+    model_pipeline.load_model_summarize()
 
     return model_pipeline
 
-def code_generation(prompt = str, model_pipeline = CodeGenerationPipeline):
-    #gen_kwargs = {
-    #    "temperature": model_pipeline.data.temperature,
-    #    "max_new_tokens": model_pipeline.data.max_new_tokens,
-    #    "top_p": model_pipeline.data.top_p,
-    #    "top_k": model_pipeline.data.top_k,
-    #}
-
+def process(prompt = str, model_pipeline = CodeGenerationPipeline):
     gen_kwargs = {
     #    "temperature": model_pipeline.data.temperature,
-        "max_new_tokens": 70,
+        "max_new_tokens": 200,
     #    "top_p": model_pipeline.data.top_p,
     #    "top_k": model_pipeline.data.top_k,
     }
+
+    sum_kwargs = {
+        "max_new_tokens": 100,
+    }
     
     code_gen = model_pipeline.generate(prompt, **gen_kwargs)
+    code_sum = model_pipeline.summarize(code_gen, **sum_kwargs)
 
-    if code_gen:
-        return code_gen
-    else:
-        return "Generation failed !"
+    return {"code": code_gen, "summary": code_sum}
+
