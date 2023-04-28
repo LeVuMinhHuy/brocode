@@ -4,19 +4,31 @@ import { useCallback, useEffect, useState } from "react";
 import { remark } from "remark";
 import html from "remark-html";
 import { Language } from "~/types/code";
-import { healthCheckApi, sendDataToApi, useDebounce } from "~/utils/clients";
+import { healthCheckApi, sendDataToApi } from "~/utils/clients";
+
+const INIT_DATA = {
+  codeGenerated: "# Solution",
+  summaryGenerated: "# Summary",
+  generateCodePrompt: "class Solution: \n\tdef",
+  problem: "# Generate two sum solution",
+  serverInfo: "Only open from 9am to 5pm (UTC +7)",
+};
 
 const Home: NextPage = () => {
   //const [code, setCode] = useState<string>("");
   const [generating, setGenerating] = useState<boolean>(false);
-  const [codeGenerated, setCodeGenerated] = useState<string>("# Solution");
-  const [summaryGenerated, setSummaryGenerated] = useState<string>("# Summary");
+  const [codeGenerated, setCodeGenerated] = useState<string>(
+    INIT_DATA.codeGenerated
+  );
+  const [summaryGenerated, setSummaryGenerated] = useState<string>(
+    INIT_DATA.summaryGenerated
+  );
   const [checkServer, setCheckServer] = useState<boolean>(true);
-  const [problem, setProblem] = useState<string>("# Generate two sum solution");
+  const [problem, setProblem] = useState<string>(INIT_DATA.problem);
   const [htmlProblem, setHtmlProblem] = useState<string>("");
   const [isUserQuestion, setIsUserQuestion] = useState<boolean>(false);
   const [question, setQuestion] = useState<string>("");
-  const generateCodePrompt = "class Solution: \n\tdef ";
+  const generateCodePrompt = INIT_DATA.generateCodePrompt;
 
   //const debouncedQuestion = useDebounce(question, 2000);
   const language = Language.Python; // just for now
@@ -34,6 +46,8 @@ const Home: NextPage = () => {
     const send = async (): Promise<void> => {
       try {
         setGenerating(true);
+        // start a timing counter
+
         const response = await sendDataToApi({
           data: `${
             isUserQuestion ? question : problem
@@ -42,7 +56,18 @@ const Home: NextPage = () => {
         });
 
         if (response) {
-          const code = response || "Nothing";
+          const filteredResponse = response.split(generateCodePrompt)[1];
+
+          const prefixFilterResponse = filteredResponse
+            ? `${generateCodePrompt} ${filteredResponse}`
+            : null;
+
+          const htmlCodeGenerated = prefixFilterResponse
+            ? prefixFilterResponse
+                .replace(/\n/g, "<br>")
+                .replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;")
+            : "Nothing";
+          const code = htmlCodeGenerated;
           setCodeGenerated(code);
           setGenerating(false);
         } else {
@@ -62,6 +87,7 @@ const Home: NextPage = () => {
     setGenerating,
     isUserQuestion,
     problem,
+    generateCodePrompt,
   ]);
 
   useEffect(() => {
@@ -126,14 +152,21 @@ const Home: NextPage = () => {
           </h1>
 
           {checkServer ? (
-            <p className="text-green-400">{"Server status: Online"}</p>
+            <div className="flex-col items-center justify-center">
+              <p className="text-center text-green-400">
+                {"Server status: Online"}
+              </p>
+              <p className="text-center text-gray-500 dark:text-gray-400">
+                {INIT_DATA.serverInfo}
+              </p>
+            </div>
           ) : (
             <div className="flex-col items-center justify-center">
               <p className="text-center text-red-400">
                 {"Server status: Offline"}
               </p>
               <p className="text-center text-gray-500 dark:text-gray-400">
-                Only open from 9am to 5pm (UTC +7)
+                {INIT_DATA.serverInfo}
               </p>
             </div>
           )}
@@ -196,6 +229,8 @@ const Home: NextPage = () => {
               <button
                 type="button"
                 onClick={() => {
+                  setCodeGenerated(INIT_DATA.codeGenerated);
+                  setSummaryGenerated(INIT_DATA.summaryGenerated);
                   generate();
                 }}
                 className="mb-2 mr-2 w-full rounded-lg border border-purple-700 px-5 py-2.5 text-center text-sm font-medium text-purple-700 hover:bg-purple-800 hover:text-white focus:outline-none focus:ring-4 focus:ring-purple-300 dark:border-purple-400 dark:text-purple-400 dark:hover:bg-purple-500 dark:hover:text-white dark:focus:ring-purple-900"
@@ -217,17 +252,23 @@ const Home: NextPage = () => {
                 </div>
                 <div className="rounded-md bg-gray-800 p-4">
                   <code className="font-mono text-sm">
-                    {codeGenerated}
-                    <div className="text-white-800 dark:text-white-200 mt-4 animate-pulse rounded-full bg-gray-800 px-3 py-1 text-center text-xs font-medium leading-none dark:bg-gray-800">
-                      generating...
-                    </div>
+                    <div dangerouslySetInnerHTML={{ __html: codeGenerated }} />
+
+                    {generating && (
+                      <div className="text-white-800 dark:text-white-200 mt-4 animate-pulse rounded-full bg-gray-800 px-3 py-1 text-center text-xs font-medium leading-none dark:bg-gray-800">
+                        generating...
+                      </div>
+                    )}
                   </code>
                 </div>
                 <div className="rounded-md bg-gray-800 p-4">
                   <code className="font-mono text-sm">{summaryGenerated}</code>
-                  <div className="text-white-800 dark:text-white-200 mt-4 animate-pulse rounded-full bg-gray-800 px-3 py-1 text-center text-xs font-medium leading-none dark:bg-gray-800">
-                    summarizing...
-                  </div>
+
+                  {generating && (
+                    <div className="text-white-800 dark:text-white-200 mt-4 animate-pulse rounded-full bg-gray-800 px-3 py-1 text-center text-xs font-medium leading-none dark:bg-gray-800">
+                      summarizing...
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
