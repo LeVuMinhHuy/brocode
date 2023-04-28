@@ -34,7 +34,6 @@ export const sendDataToApi = async (
   data: Code
 ): Promise<ResponseData | undefined> => {
   try {
-    console.log({ data });
     const response = await fetch(`${server}/gen/code`, {
       method: "POST",
       headers: {

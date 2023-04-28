@@ -29,6 +29,7 @@ const Home: NextPage = () => {
   const [htmlProblem, setHtmlProblem] = useState<string>("");
   const [isUserQuestion, setIsUserQuestion] = useState<boolean>(false);
   const [question, setQuestion] = useState<string>("");
+  const [continueCount, setContinueCount] = useState<number>(1);
   const [codePrompt, setCodePrompt] = useState<string>(
     INIT_DATA.generateCodePrompt
   );
@@ -63,6 +64,7 @@ const Home: NextPage = () => {
               INIT_DATA.generateInfoPrompt
             } \n ${prefix || convertCodePrompt}`,
             language,
+            continue_count: continueCount,
           });
 
           if (response) {
@@ -103,7 +105,14 @@ const Home: NextPage = () => {
       void send();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [language, setCodeGenerated, setGenerating, problem, codePrompt]
+    [
+      language,
+      setCodeGenerated,
+      setGenerating,
+      problem,
+      codePrompt,
+      continueCount,
+    ]
   );
 
   const newProblem = useCallback(async () => {
@@ -131,10 +140,12 @@ const Home: NextPage = () => {
 
   const handleInputQuestion = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setQuestion(e.target.value);
+    setContinueCount(1);
   };
 
   const handleInputPrompt = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCodePrompt(e.target.value);
+    setContinueCount(1);
   };
 
   //const handleCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -195,6 +206,7 @@ const Home: NextPage = () => {
                       type="button"
                       onClick={() => {
                         void newProblem();
+                        setContinueCount(1);
                         setIsUserQuestion(false);
                       }}
                       className="mb-2 mr-2 rounded-lg bg-purple-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
@@ -205,6 +217,9 @@ const Home: NextPage = () => {
                     <button
                       type="button"
                       onClick={() => {
+                        if (!isUserQuestion) {
+                          setContinueCount(1);
+                        }
                         setIsUserQuestion(true);
                       }}
                       className="mb-2 mr-2 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
@@ -262,6 +277,7 @@ const Home: NextPage = () => {
                     type="button"
                     onClick={() => {
                       generate(codeGenerated);
+                      setContinueCount((prev: number) => prev + 1);
                     }}
                     className="mb-2 rounded-lg bg-purple-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
                   >
