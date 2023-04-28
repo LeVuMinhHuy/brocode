@@ -3,12 +3,13 @@ import Head from "next/head";
 import { useCallback, useEffect, useState } from "react";
 import { remark } from "remark";
 import html from "remark-html";
-import { Language } from "~/types/code";
+import { Language, type ResponseData } from "~/types/code";
 import { healthCheckApi, sendDataToApi } from "~/utils/clients";
 
 const INIT_DATA = {
   codeGenerated: "# Solution",
   summaryGenerated: "# Summary",
+  generateInfoPrompt: "Generate Solution only",
   generateCodePrompt: "class Solution: \n\tdef",
   problem: "# Generate two sum solution",
   serverInfo: "Only open from 9am to 5pm (UTC +7)",
@@ -28,7 +29,9 @@ const Home: NextPage = () => {
   const [htmlProblem, setHtmlProblem] = useState<string>("");
   const [isUserQuestion, setIsUserQuestion] = useState<boolean>(false);
   const [question, setQuestion] = useState<string>("");
-  const generateCodePrompt = INIT_DATA.generateCodePrompt;
+  const [codePrompt, setCodePrompt] = useState<string>(
+    INIT_DATA.generateCodePrompt
+  );
 
   //const debouncedQuestion = useDebounce(question, 2000);
   const language = Language.Python; // just for now
@@ -42,59 +45,60 @@ const Home: NextPage = () => {
     void check();
   }, []);
 
-  const generate = useCallback(() => {
-    const send = async (): Promise<void> => {
-      try {
-        setGenerating(true);
-        // start a timing counter
+  const generate = useCallback(
+    (prefix = "") => {
+      const send = async (): Promise<void> => {
+        try {
+          setGenerating(true);
+          console.log(prefix || INIT_DATA.generateCodePrompt);
 
-        const response = await sendDataToApi({
-          data: `${
-            isUserQuestion ? question : problem
-          } \n ${generateCodePrompt}`,
-          language,
-        });
+          const response: ResponseData | undefined = await sendDataToApi({
+            data: `${isUserQuestion ? question : problem} \n ${
+              INIT_DATA.generateInfoPrompt
+            } \n ${prefix || codePrompt}`,
+            language,
+          });
 
-        if (response) {
-          const filteredResponse = response.split(generateCodePrompt)[1];
+          if (response) {
+            console.log({ response });
 
-          const prefixFilterResponse = filteredResponse
-            ? `${generateCodePrompt} ${filteredResponse}`
-            : null;
+            const codeResponse = response.code;
+            const summaryResponse = response.summary;
 
-          const htmlCodeGenerated = prefixFilterResponse
-            ? prefixFilterResponse
-                .replace(/\n/g, "<br>")
-                .replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;")
-            : "Nothing";
-          const code = htmlCodeGenerated;
-          setCodeGenerated(code);
-          setGenerating(false);
-        } else {
-          setCodeGenerated("Nothing more");
-          setGenerating(false);
+            if (summaryResponse) {
+              setSummaryGenerated(summaryResponse);
+            }
+
+            const filteredResponse = codeResponse.split(
+              INIT_DATA.generateCodePrompt
+            )[1];
+
+            const prefixFilterResponse = filteredResponse
+              ? `${INIT_DATA.generateCodePrompt} ${filteredResponse}`
+              : null;
+
+            const htmlCodeGenerated = prefixFilterResponse
+              ? prefixFilterResponse
+                  .replace(/\n/g, "<br>")
+                  .replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;")
+              : "Nothing";
+            const code = htmlCodeGenerated;
+            setCodeGenerated(code);
+            setGenerating(false);
+          } else {
+            setCodeGenerated("Nothing more");
+            setGenerating(false);
+          }
+        } catch (error) {
+          console.error("Error:", error);
         }
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
+      };
 
-    void send();
-  }, [
-    question,
-    language,
-    setCodeGenerated,
-    setGenerating,
-    isUserQuestion,
-    problem,
-    generateCodePrompt,
-  ]);
-
-  useEffect(() => {
-    if (!!question) {
-      generate();
-    }
-  }, [generate, question]);
+      void send();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [language, setCodeGenerated, setGenerating, problem]
+  );
 
   const newProblem = useCallback(async () => {
     const response = await fetch("/leetcode-solutions.json");
@@ -121,6 +125,10 @@ const Home: NextPage = () => {
 
   const handleInputQuestion = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setQuestion(e.target.value);
+  };
+
+  const handleInputPrompt = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setCodePrompt(e.target.value);
   };
 
   //const handleCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -181,6 +189,7 @@ const Home: NextPage = () => {
                       type="button"
                       onClick={() => {
                         void newProblem();
+                        setIsUserQuestion(false);
                       }}
                       className="mb-2 mr-2 rounded-lg bg-purple-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
                     >
@@ -190,7 +199,7 @@ const Home: NextPage = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        setIsUserQuestion((prev: boolean) => !prev);
+                        setIsUserQuestion(true);
                       }}
                       className="mb-2 mr-2 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
                     >
@@ -198,12 +207,12 @@ const Home: NextPage = () => {
                     </button>
                   </div>
                 </div>
-                <div className="overflow-y-auto	">
+                <div className="h-full overflow-y-auto">
                   {isUserQuestion ? (
                     <>
                       <textarea
                         id="question"
-                        className="w-full bg-gray-800 px-3 py-2 font-mono text-sm focus:outline-none"
+                        className="h-full w-full rounded-md bg-gray-800 px-3 py-2 font-mono text-sm focus:outline-none"
                         rows={10}
                         placeholder="Enter your own challenge here"
                         value={question}
@@ -242,15 +251,28 @@ const Home: NextPage = () => {
             <div className="col-span-5">
               <div className="flex h-full flex-col gap-4 rounded-xl bg-white/10 p-4 text-white ">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-2xl font-bold">Input →</h3>
+                  <h3 className="text-2xl font-bold">Brocode →</h3>
                   <button
                     type="button"
+                    onClick={() => {
+                      generate(codeGenerated);
+                    }}
                     className="mb-2 rounded-lg bg-purple-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
                   >
-                    Re-generate
+                    Continue
                   </button>
                 </div>
-                <div className="rounded-md bg-gray-800 p-4">
+
+                <textarea
+                  id="question"
+                  className="h-32 w-full rounded-md bg-gray-800 px-3 py-2 font-mono text-sm focus:outline-none"
+                  rows={10}
+                  placeholder="# Prompt"
+                  value={codePrompt}
+                  onChange={handleInputPrompt}
+                ></textarea>
+
+                <div className="h-full rounded-md bg-gray-800 p-4">
                   <code className="font-mono text-sm">
                     <div dangerouslySetInnerHTML={{ __html: codeGenerated }} />
 

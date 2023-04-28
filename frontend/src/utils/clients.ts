@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Code } from "~/types/code";
+import type { Code, ResponseData } from "~/types/code";
 
 const server = `${process.env.NEXT_PUBLIC_SERVER_HOST || "http://localhost"}:${
   process.env.NEXT_PUBLIC_SERVER_PORT || ""
@@ -22,7 +22,7 @@ export const healthCheckApi = async (): Promise<boolean | undefined> => {
       method: "GET",
     });
 
-    const data = (await response.json()) as string;
+    await response.json();
 
     return true;
   } catch (error) {
@@ -32,8 +32,9 @@ export const healthCheckApi = async (): Promise<boolean | undefined> => {
 
 export const sendDataToApi = async (
   data: Code
-): Promise<string | undefined> => {
+): Promise<ResponseData | undefined> => {
   try {
+    console.log({ data });
     const response = await fetch(`${server}/gen/code`, {
       method: "POST",
       headers: {
@@ -42,7 +43,7 @@ export const sendDataToApi = async (
       body: JSON.stringify(data),
     });
 
-    return (await response.json()) as string;
+    return (await response.json()) as ResponseData;
   } catch (error) {
     console.error("Error:", error);
   }
