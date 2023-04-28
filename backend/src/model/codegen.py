@@ -21,7 +21,7 @@ class CodeGenerationPipeline:
                 offload_folder = "./offload"
         )
 
-        self.tokenizer = AutoTokenizer.from_pretrained(config.base_model_name_or_path)
+        self.tokenizer_generate = AutoTokenizer.from_pretrained(config.base_model_name_or_path)
     
         model_generate = PeftModel.from_pretrained(model_generate, self.data.model_generate)
 
@@ -31,12 +31,12 @@ class CodeGenerationPipeline:
         self.model_generate = model_generate
 
     def generate(self, prompt: str, **kwargs):
-        batch = self.tokenizer(prompt, return_tensors='pt')
+        batch = self.tokenizer_generate(prompt, return_tensors='pt')
         
         with torch.cuda.amp.autocast():
             output_tokens = self.model_generate.generate(**batch, **kwargs)
         
-        return self.tokenizer.decode(output_tokens[0], skip_special_tokens=True)
+        return self.tokenizer_generate.decode(output_tokens[0], skip_special_tokens=True)
 
 
     def load_model_summarize(self):
@@ -53,7 +53,7 @@ class CodeGenerationPipeline:
                 offload_folder = "./offload"
         )
 
-        self.tokenizer = AutoTokenizer.from_pretrained(config.base_model_name_or_path)
+        self.tokenizer_summarize = AutoTokenizer.from_pretrained(config.base_model_name_or_path)
     
         model_summarize = PeftModel.from_pretrained(model_summarize, self.data.model_summarize)
 
@@ -63,10 +63,10 @@ class CodeGenerationPipeline:
         self.model_summarize = model_summarize
 
     def summarize(self, generated_code: str, **kwargs):
-        batch = self.tokenizer(generated_code, return_tensors='pt')
+        batch = self.tokenizer_summarize(generated_code, return_tensors='pt')
         
         with torch.cuda.amp.autocast():
             output_tokens = self.model_summarize.generate(**batch, **kwargs)
         
-        return self.tokenizer.decode(output_tokens[0], skip_special_tokens=True)
+        return self.tokenizer_summarize.decode(output_tokens[0], skip_special_tokens=True)
 
