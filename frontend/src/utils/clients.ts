@@ -24,8 +24,6 @@ export const healthCheckApi = async (): Promise<boolean | undefined> => {
 
     const data = (await response.json()) as string;
 
-    console.log({ data });
-
     return true;
   } catch (error) {
     console.error("Error:", error);
