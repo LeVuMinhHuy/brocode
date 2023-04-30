@@ -1,4 +1,5 @@
 import { type NextPage } from "next";
+import Image from "next/image";
 import Head from "next/head";
 import { useCallback, useEffect, useState } from "react";
 import { remark } from "remark";
@@ -12,7 +13,7 @@ const INIT_DATA = {
   generateInfoPrompt: "Generate Solution only",
   generateCodePrompt: "class Solution: \n\tdef",
   problem: "# Generate two sum solution",
-  serverInfo: "Only open from 9am to 5pm (UTC +7)",
+  serverInfo: "Only open from 1pm to 5pm (UTC +7)",
 };
 
 const Home: NextPage = () => {
@@ -176,25 +177,41 @@ const Home: NextPage = () => {
             <span className="text-[hsl(280,100%,70%)]">Bro</span>code
           </h1>
 
-          {checkServer ? (
-            <div className="flex-col items-center justify-center">
+          <div>
+            <div className="mb-2 flex items-center justify-center">
+              <a
+                href="https://github.com/LeVuMinhHuy/brocode"
+                rel="noopener nofollow noreferrer"
+                className="mr-3 inline-flex items-center rounded-full border border-gray-200 bg-white px-2 py-2 hover:bg-gray-100 focus:z-10 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:border-purple-800 dark:bg-purple-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-500"
+              >
+                <Image src="/github.svg" alt="Github" width={18} height={18} />
+              </a>
+              <a
+                href="https://huggingface.co/mhhmm/codegen-6B-lora"
+                rel="noopener nofollow noreferrer"
+                className="mr-3 inline-flex items-center rounded-full border border-gray-200 bg-white px-2 py-2 hover:bg-gray-100 focus:z-10 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:border-purple-800 dark:bg-purple-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-500"
+              >
+                <Image
+                  src="/hf-logo.svg"
+                  alt="HuggingFace"
+                  width={18}
+                  height={18}
+                />
+              </a>
+            </div>
+            {checkServer ? (
               <p className="text-center text-green-400">
                 {"Server status: Online"}
               </p>
-              <p className="text-center text-gray-500 dark:text-gray-400">
-                {INIT_DATA.serverInfo}
-              </p>
-            </div>
-          ) : (
-            <div className="flex-col items-center justify-center">
+            ) : (
               <p className="text-center text-red-400">
                 {"Server status: Offline"}
               </p>
-              <p className="text-center text-gray-500 dark:text-gray-400">
-                {INIT_DATA.serverInfo}
-              </p>
-            </div>
-          )}
+            )}
+            <p className="text-center text-gray-500 dark:text-gray-400">
+              {INIT_DATA.serverInfo}
+            </p>
+          </div>
 
           <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-11 md:gap-8">
             <div className="col-span-5">

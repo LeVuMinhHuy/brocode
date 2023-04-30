@@ -21,12 +21,13 @@ Home-cook AI model
 -   [x] PyCodeGPT + CodeGen
 -   [x] P-tuning v2 + LoRA
 -   [x] AlphaCode Dataset + Leetcode Dataset
+-   [x] CodeT5-large
 -   [ ] Langchain
 -   [ ] Pinecone
 
 #### Progress
 
-Tue Apr 25, 2023:
+Tue Apr 30, 2023:
 
 -   [x] Simple UI
 -   [x] Send code to backend
@@ -35,14 +36,17 @@ Tue Apr 25, 2023:
 -   [x] Prompt tuning that LLM
 -   [x] Using PyCodeGPT 110M
 -   [x] Using CodeGen 2B
--   [ ] Using CodeGen 16B
+-   [x] Using CodeGen 6B
 -   [ ] Using P-tuning v2
 -   [x] Using LoRA
 -   [x] Using AlphaCode Dataset
 -   [x] Using Leetcode Dataset
--   [ ] Upgrade UI and apply new home-cook model
+-   [x] Upgrade UI and apply new home-cook model
+-   [x] Using CodeT5 Large
+-   [x] Generate and Summarize task
+-   [x] Config domain and SSL to a real website, wtf who am i a fullstack dev right ? lololol
 -   [ ] Store all solutions and discussion into vector database (Pinecone, ...)
 -   [ ] Use Langchain and GPT to query from vector database
 -   [ ] Home cook my own Code to Text model and replace that to GPT model Langchain using above
--   [ ] Upgrade UI/UX
+-   [x] Upgrade UI/UX
 -   [ ] To the moon
