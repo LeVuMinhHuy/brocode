@@ -56,3 +56,8 @@ You can find my works here:
 -   Colab code: [Colab code](https://colab.research.google.com/drive/1dBI4t4Fgn150lAzM_EV6TP0f1_1SYAN-?usp=sharing)
 
 Or contact me [here](https://levuminhhuy.vercel.app/about):
+
+#### Future
+
+-   [ ] Reduce generation time
+-   [ ] Benchmark and validation
