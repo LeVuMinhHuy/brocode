@@ -42,9 +42,9 @@ Architecture:
 
 -   **Saleforces** ofcourse, for providing LLM: Codegen-6B-Mono and CodeT5-large
 -   Definitely **HuggingFace**, for Peft and an awesome community
--   My friend **Thai Tieu Phuong** for helping me train models on Google Colab Pro+
 -   My thesis advisor **Quan Thanh Tho** for inspiring me with this topic
--   My family, with pride, even though you guys may not care
+-   My friend **Thai Tieu Phuong** for helping me train models on Google Colab Pro+
+-   My family, with proudly, even though you guys may not care
 -   And others
 
 #### Sources
