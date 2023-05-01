@@ -1,52 +1,58 @@
 A bro who codes algorithm with you
 
-![Hello world](./.pics/04.png)
+![Hello world](./.pics/05.png)
 
 ---
 
+#### Overview
+
+Features:
+
+-   [x] Get random algo problem from leetcode dataset
+-   [x] Input your own problem, from simple like "generate a function check if there is any even number in the input list" to medium/hard algorithm problem on leetcode/hackerrank
+-   [x] Input your prompt, or your prefix solution
+-   [x] AI Generate following solution from your prompt
+-   [x] AI Summarize the solution already generated
+-   [x] Deployed to vercel and dns map it to [brocode.site](https://brocode.site)
+
+Note: Server only open from 1pm-5pm (UTC +7) due to the :money-limited:
+
 #### Frontend
 
-T3 stack
+Architecture:
 
 -   [x] NextJS 13
 -   [x] Tailwind
--   [ ] Monaco Editor
+-   [ ] Monaco editor
 
 #### Backend
 
-Home-cook AI model
+Architecture:
 
 -   [x] FastAPI
--   [x] Google Colab + Ngrok
--   [x] PyCodeGPT + CodeGen
--   [x] P-tuning v2 + LoRA
--   [x] AlphaCode Dataset + Leetcode Dataset
--   [x] CodeT5-large
+-   [x] Codegen-6B-Mono LoRA tuning with HF Peft
+-   [x] CodeT5-large LoRA tuning with HF Peft
+-   [x] Downstream dataset from [AlphaCode CodeContests](https://huggingface.co/datasets/deepmind/code_contests), [Leetcode solutions](https://huggingface.co/datasets/mhhmm/leetcode-solutions-python) (python only)
+-   [ ] P-tuning v2
 -   [ ] Langchain
 -   [ ] Pinecone
+-   [x] Deployed to a VM Google cloud with n1-highmem-8 vCPU=8 Memory=52GB
 
-#### Progress
+#### Kudos
 
-Tue Apr 30, 2023:
+-   **Saleforces** ofcourse, for providing LLM: Codegen-6B-Mono and CodeT5-large
+-   Definitely **HuggingFace**, for Peft and an awesome community
+-   My friend **Thai Tieu Phuong** for helping me train models on Google Colab Pro+
+-   My thesis advisor **Quan Thanh Tho** for inspiring me with this topic
+-   My family, with pride, even though you guys may not care
+-   And others
 
--   [x] Simple UI
--   [x] Send code to backend
--   [x] Generate based only on PyCodeGPT LLM and return to frontend
--   [x] Deploy to vercel
--   [x] Prompt tuning that LLM
--   [x] Using PyCodeGPT 110M
--   [x] Using CodeGen 2B
--   [x] Using CodeGen 6B
--   [ ] Using P-tuning v2
--   [x] Using LoRA
--   [x] Using AlphaCode Dataset
--   [x] Using Leetcode Dataset
--   [x] Upgrade UI and apply new home-cook model
--   [x] Using CodeT5 Large
--   [x] Generate and Summarize task
--   [x] Config domain and SSL to a real website, wtf who am i a fullstack dev right ? lololol
--   [ ] Store all solutions and discussion into vector database (Pinecone, ...)
--   [ ] Use Langchain and GPT to query from vector database
--   [ ] Home cook my own Code to Text model and replace that to GPT model Langchain using above
--   [x] Upgrade UI/UX
--   [ ] To the moon
+#### Sources
+
+You can find my works here:
+
+-   Website related: This project on Github
+-   Adapters: [My HuggingFace](https://huggingface.co/mhhmm)
+-   Colab code: [Colab code](https://colab.research.google.com/drive/1dBI4t4Fgn150lAzM_EV6TP0f1_1SYAN-?usp=sharing)
+
+Or contact me [here](https://levuminhhuy.vercel.app/about):

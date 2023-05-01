@@ -198,6 +198,18 @@ const Home: NextPage = () => {
                   height={18}
                 />
               </a>
+              <a
+                href="https://colab.research.google.com/drive/1dBI4t4Fgn150lAzM_EV6TP0f1_1SYAN-?usp=sharing"
+                rel="noopener nofollow noreferrer"
+                className="mr-3 inline-flex items-center rounded-full border border-gray-200 bg-white px-2 py-2 hover:bg-gray-100 focus:z-10 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:border-purple-800 dark:bg-purple-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-500"
+              >
+                <Image
+                  src="/colab.svg"
+                  alt="Google Colab"
+                  width={18}
+                  height={18}
+                />
+              </a>
             </div>
             {checkServer ? (
               <p className="text-center text-green-400">
