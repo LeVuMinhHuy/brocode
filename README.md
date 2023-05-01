@@ -44,7 +44,7 @@ Architecture:
 -   Definitely **HuggingFace**, for Peft and an awesome community
 -   My thesis advisor **Quan Thanh Tho** for inspiring me with this topic
 -   My friend **Thai Tieu Phuong** for helping me train models on Google Colab Pro+
--   My family, with proudly, even though you guys may not care
+-   My family, proudly, even though you guys may not care
 -   And others
 
 #### Sources
