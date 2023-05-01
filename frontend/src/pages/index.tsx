@@ -25,7 +25,7 @@ const Home: NextPage = () => {
   const [summaryGenerated, setSummaryGenerated] = useState<string>(
     INIT_DATA.summaryGenerated
   );
-  const [checkServer, setCheckServer] = useState<boolean>(true);
+  const [checkServer, setCheckServer] = useState<boolean>(false);
   const [problem, setProblem] = useState<string>(INIT_DATA.problem);
   const [htmlProblem, setHtmlProblem] = useState<string>("");
   const [isUserQuestion, setIsUserQuestion] = useState<boolean>(false);
@@ -41,7 +41,10 @@ const Home: NextPage = () => {
   useEffect(() => {
     const check = async () => {
       const result = await healthCheckApi();
-      setCheckServer(!!result);
+      console.log({ result });
+      if (result) {
+        setCheckServer(!!result);
+      }
     };
 
     void check();
