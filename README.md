@@ -14,7 +14,7 @@ I created a TypeScript-Instruct 20K dataset. It's 20,000 pairs of {instruction, 
 
 ![20K Flow](./.pics/20k_flow.png)
 
-For the output, thank you HuggingFace, I get TypeScript code data from The Stack project \\
+For the output, thank you HuggingFace, I get TypeScript code data from The Stack project  
 For the instruction, thank you OpenAI, I made 20K API call request to generate instruction and explanation for those code data
 
 #### Training
