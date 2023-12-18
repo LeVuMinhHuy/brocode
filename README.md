@@ -14,7 +14,7 @@ I created a TypeScript-Instruct 20K dataset. It's 20,000 pairs of {instruction, 
 
 ![20K Flow](./.pics/20k_flow.png)
 
-For the output, thank you HuggingFace, I get TypeScript code data from The Stack project
+For the output, thank you HuggingFace, I get TypeScript code data from The Stack project \\
 For the instruction, thank you OpenAI, I made 20K API call request to generate instruction and explanation for those code data
 
 #### Training
@@ -35,7 +35,7 @@ I use the MultiPL-E benchmark [Cassano et al., 2023](https://ieeexplore.ieee.org
 #### Kudos
 
 -   My family for keep telling me not to quit on this master thesis while I'm a web developer
--   My thesis advisor Assoc. Prof. Quan Thanh Tho for inspiring me with this topic \
+-   My thesis advisor Assoc. Prof. Quan Thanh Tho for inspiring me with this topic
 -   Modal.com for making the training steps much more easier
 
 #### Sources
