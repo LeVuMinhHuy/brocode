@@ -28,7 +28,7 @@ Every other things about training (parameters, logs, ...) you can see it in here
 
 #### Results
 
-I use the MultiPL-E benchmark [Cassano et al., 2023](https://ieeexplore.ieee.org/document/10103177) just like the base model Code Llama using in [their paper](https://arxiv.org/abs/2308.12950)
+I use the MultiPL-E benchmark ([Cassano et al., 2023](https://ieeexplore.ieee.org/document/10103177)) just like the base model Code Llama using in [their paper](https://arxiv.org/abs/2308.12950)
 
 (link the evaluaion result table later)
 
