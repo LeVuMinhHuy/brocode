@@ -10,7 +10,7 @@ Why always Python ? Let's finetune a code generation model for TypeScript only !
 
 #### Dataset
 
-I created a TypeScript-Instruct 20K dataset. It's 20,000 pairs of {instruction, output} that you can't find in any current Code Generation LLMs (or maybe you can)
+I created a TypeScript-Instruct 20K dataset. It's 20,000 pairs of {instruction, output} that you can't find in any current Code Generation LLMs dataset (or maybe you can)
 
 ![20K Flow](./.pics/20k_flow.png)
 
