@@ -54,4 +54,4 @@ Or contact me here: https://levuminhhuy.site/about
 
 #### Future
 
--   How about Rust ?
+-   How about Rust ?!
