@@ -1,63 +1,57 @@
-A bro who codes algorithm with you
+A bro who codes with you
 
-![Hello world](./.pics/05.png)
+![The Architecture](./.pics/about-the-model.png)
+
+![Public Model](./.pics/public.png)
+
+![Private Model](./.pics/private.png)
 
 ---
 
 #### Overview
 
-Features:
+Why always Python ? Let's finetune a code generation model for TypeScript only !
 
--   [x] Get random algo problem from leetcode dataset
--   [x] Input your own problem, from simple like "generate a function check if there is any even number in the input list" to medium/hard algorithm problem on leetcode/hackerrank
--   [x] Input your prompt, or your prefix solution
--   [x] AI Generate following solution from your prompt
--   [x] AI Summarize the solution already generated
--   [x] Deployed to vercel and dns map it to [brocode.site](https://brocode.site)
+#### Dataset
 
-Note: Server only open from 1pm-5pm (UTC +7) due to the :money-limited:
+I created a TypeScript-Instruct 20K dataset. It's 20,000 pairs of {instruction, output} that you can't find in any current Code Generation LLMs dataset (or maybe you can)
 
-#### Frontend
+![20K Flow](./.pics/20k_flow.png)
 
-Architecture:
+For the output, thank you HuggingFace, I get TypeScript code data from The Stack project  
+For the instruction, thank you OpenAI, I made 20K API call request to generate instruction and explanation for those code data
 
--   [x] NextJS 13
--   [x] Tailwind
--   [ ] Monaco editor
+#### Training
 
-#### Backend
+- Base Model: It's the Code Llama - Instruct 13B
+- Parameter-Efficient Fine-Tuning method: LoRA
+- Using Instruction Tuning with two A100 GPUs
 
-Architecture:
+Every other things about training (parameters, logs, ...) you can see it in here (link the HuggingFace Training Metrics link later)
 
--   [x] FastAPI
--   [x] Codegen-6B-Mono LoRA tuning with HF Peft
--   [x] CodeT5-large LoRA tuning with HF Peft
--   [x] Downstream dataset from [AlphaCode CodeContests](https://huggingface.co/datasets/deepmind/code_contests), [Leetcode solutions](https://huggingface.co/datasets/mhhmm/leetcode-solutions-python) (python only)
--   [ ] P-tuning v2
--   [ ] Langchain
--   [ ] Pinecone
--   [x] Deployed to a VM Google cloud with n1-highmem-8 vCPU=8 Memory=52GB
+
+#### Results
+
+I use the MultiPL-E benchmark ([Cassano et al., 2023](https://ieeexplore.ieee.org/document/10103177)) just like the base model Code Llama using in [their paper](https://arxiv.org/abs/2308.12950)
+
+(link the evaluaion result table later)
 
 #### Kudos
 
--   **Saleforces** ofcourse, for providing LLM: Codegen-6B-Mono and CodeT5-large
--   Definitely **HuggingFace**, for Peft and an awesome community
--   My thesis advisor **Quan Thanh Tho** for inspiring me with this topic
--   My friend **Thai Tieu Phuong** for helping me train models on Google Colab Pro+
--   My family, proudly, even though you guys may not care
--   And others
+-   My family for keep telling me not to quit on this master thesis while I'm a web developer
+-   My thesis advisor Assoc. Prof. Quan Thanh Tho for inspiring me with this topic
+-   Modal.com for making the training steps much more easier
 
 #### Sources
 
 You can find my works here:
 
--   Website related: This project on Github
--   Adapters: [My HuggingFace](https://huggingface.co/mhhmm)
--   Colab code: [Colab code](https://colab.research.google.com/drive/1dBI4t4Fgn150lAzM_EV6TP0f1_1SYAN-?usp=sharing)
+-   Inference Website: https://brocode.site (currently down and not the correct version, but if I somehow finish setup the server, it's will be there)
+-   Dataset: [TypeScript-Instruct 20K](https://huggingface.co/datasets/mhhmm/typescript-instruct-20k) (Please ping me if you also want to use this)
+-   Fine-tuned Model: TypeScript-Instruct Model (will link later, it will be on my HuggingFace eventually)
 
-Or contact me [here](https://levuminhhuy.vercel.app/about):
+Or contact me here: https://levuminhhuy.site/about
 
 #### Future
 
--   [ ] Reduce generation time
--   [ ] Benchmark and validation
+-   How about Rust ?
