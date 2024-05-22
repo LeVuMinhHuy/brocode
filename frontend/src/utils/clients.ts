@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import type { Code, ResponseData } from "~/types/code";
+import axios from "axios";
 
-const server = `${process.env.NEXT_PUBLIC_SERVER_HOST || "http://localhost"}:${
-  process.env.NEXT_PUBLIC_SERVER_PORT || ""
+const server = `${
+  process.env.NEXT_PUBLIC_SERVER_HOST ||
+  "https://vothinguyenhue--example-axolotl-inference-web.modal.run"
 }`;
 
 export const useDebounce = (value: string, delay: number) => {
@@ -31,19 +32,19 @@ export const healthCheckApi = async (): Promise<boolean | undefined> => {
 };
 
 export const sendDataToApi = async (
-  data: Code
-): Promise<ResponseData | undefined> => {
+  data: string
+): Promise<string | undefined> => {
   try {
-    const response = await fetch(`${server}/gen/code`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    const response = await axios.get(
+      `https://vothinguyenhue--example-axolotl-inference-web.modal.run/`,
+      {
+        params: { input: data },
+      }
+    );
 
-    return (await response.json()) as ResponseData;
+    return response.data;
   } catch (error) {
     console.error("Error:", error);
+    return undefined;
   }
 };

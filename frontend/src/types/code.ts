@@ -7,7 +7,6 @@ export enum Language {
 export type Code = {
   data: string;
   language: Language;
-  continue_count: number;
 };
 
 export type ResponseData = {
