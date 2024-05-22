@@ -1,10 +1,7 @@
 import { type NextPage } from "next";
-import Image from "next/image";
 import Head from "next/head";
+import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
-import { remark } from "remark";
-import html from "remark-html";
-import { Language, type ResponseData } from "~/types/code";
 import { healthCheckApi, sendDataToApi } from "~/utils/clients";
 
 const INIT_DATA = {
@@ -20,8 +17,6 @@ const Home: NextPage = () => {
   );
   const [checkServer, setCheckServer] = useState<boolean>(false);
   const [question, setQuestion] = useState<string>("");
-
-  const language = Language.Python; // just for now
 
   useEffect(() => {
     const check = async () => {

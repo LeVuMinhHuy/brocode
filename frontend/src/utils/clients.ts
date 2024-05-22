@@ -42,7 +42,7 @@ export const sendDataToApi = async (
       }
     );
 
-    return response.data;
+    return response.data as string;
   } catch (error) {
     console.error("Error:", error);
     return undefined;
