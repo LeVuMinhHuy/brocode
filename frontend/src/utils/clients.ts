@@ -36,7 +36,7 @@ export const sendDataToApi = async (
 ): Promise<string | undefined> => {
   try {
     const response = await axios.get(
-      `https://vothinguyenhue--example-axolotl-inference-web.modal.run/`,
+      `https://tedvuminhhuy--axo-2024-01-18-06-39-24-7b26-inference-web.modal.run/`,
       {
         params: { input: data },
       }
