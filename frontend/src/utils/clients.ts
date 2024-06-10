@@ -12,7 +12,6 @@ const serverPrivate = `${
   "https://levuminhhuycompsci--example-axolotl-inference-web.modal.run"
 }`;
 
-
 export const useDebounce = (value: string, delay: number) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
@@ -52,23 +51,21 @@ export const healthCheckPrivateApi = async (): Promise<boolean | undefined> => {
   }
 };
 
-
 export const sendDataToApi = async (
   data: string,
   model: Model
-
 ): Promise<string | undefined> => {
   try {
     let modelEndpoint = "";
     let updatedData = data;
 
     if (model === Model.PRIVATE) {
-      modelEndpoint = serverPrivate
-      updatedData = `[INST] ${data} [/INST]`
+      modelEndpoint = serverPrivate;
+      updatedData = `[INST] ${data} [/INST]`;
     }
 
     if (model === Model.PUBLIC) {
-      modelEndpoint = serverPublic
+      modelEndpoint = serverPublic;
     }
 
     if (!modelEndpoint) {
@@ -77,16 +74,11 @@ export const sendDataToApi = async (
 
     updatedData = encodeURIComponent(updatedData);
 
-    const response = await axios.get(
-      `${modelEndpoint}`,
-      {
-        params: { input: updatedData },
-      }
-    );
+    const response = await axios.get(`${modelEndpoint}`, {
+      params: { input: updatedData },
+    });
 
-    console.log({response: response.data})
-
-    return decodeURIComponent(response.data) as string;
+    return decodeURIComponent(response.data as string);
   } catch (error) {
     console.error("Error:", error);
     return undefined;
