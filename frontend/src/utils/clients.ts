@@ -9,7 +9,7 @@ const serverPublic = `${
 
 const serverPrivate = `${
   process.env.NEXT_PUBLIC_SERVER_PRIVATE_HOST ||
-  "https://levuminhhuycompsci--axo-2023-12-16-23-54-02-5af6-inference-web.modal.run"
+  "https://levuminhhuycompsci--example-axolotl-inference-web.modal.run"
 }`;
 
 
@@ -60,9 +60,11 @@ export const sendDataToApi = async (
 ): Promise<string | undefined> => {
   try {
     let modelEndpoint = "";
+    let updatedData = data;
 
     if (model === Model.PRIVATE) {
       modelEndpoint = serverPrivate
+      updatedData = `[INST] ${data} [/INST]`
     }
 
     if (model === Model.PUBLIC) {
@@ -73,15 +75,18 @@ export const sendDataToApi = async (
       return undefined;
     }
 
+    updatedData = encodeURIComponent(updatedData);
 
     const response = await axios.get(
-      `${modelEndpoint}/`,
+      `${modelEndpoint}`,
       {
-        params: { input: data },
+        params: { input: updatedData },
       }
     );
 
-    return response.data as string;
+    console.log({response: response.data})
+
+    return decodeURIComponent(response.data) as string;
   } catch (error) {
     console.error("Error:", error);
     return undefined;
