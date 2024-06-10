@@ -4,7 +4,7 @@ import { Model } from "~/pages";
 
 const serverPublic = `${
   process.env.NEXT_PUBLIC_SERVER_PUBLIC_HOST ||
-  "https://tedvuminhhuy--axo-2024-01-18-06-39-24-7b26-inference-web.modal.run"
+  "https://tedvuminhhuy--example-axolotl-inference-web.modal.run"
 }`;
 
 const serverPrivate = `${
