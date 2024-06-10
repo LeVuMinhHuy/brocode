@@ -2,27 +2,40 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
-import { healthCheckApi, sendDataToApi } from "~/utils/clients";
+import { healthCheckPrivateApi, healthCheckPublicApi, sendDataToApi } from "~/utils/clients";
 
 const INIT_DATA = {
   codeGenerated: "# Solution",
   summaryGenerated: "# Summary",
-  serverInfo: "Only open from 1pm to 5pm (UTC +7)",
+  serverPublicInfo: "Model Public: You can ask anything, model will generate general Typescript code",
+  serverPrivateInfo: "Model Private: You need to understand our defined project, model will only generate code related to our codebase",
 };
+
+export const enum Model {
+  PRIVATE = "private",
+  PUBLIC = "public",
+}
 
 const Home: NextPage = () => {
   const [generating, setGenerating] = useState<boolean>(false);
   const [codeGenerated, setCodeGenerated] = useState<string>(
     INIT_DATA.codeGenerated
   );
-  const [checkServer, setCheckServer] = useState<boolean>(false);
+  const [checkPublicServer, setCheckPublicServer] = useState<boolean>(false);
+  const [checkPrivateServer, setCheckPrivateServer] = useState<boolean>(false);
   const [question, setQuestion] = useState<string>("");
+  const [model, setModel] = useState<Model>(Model.PRIVATE);
 
   useEffect(() => {
     const check = async () => {
-      const result = await healthCheckApi();
-      if (result) {
-        setCheckServer(!!result);
+      const publicResult = await healthCheckPublicApi();
+      if (publicResult ) {
+        setCheckPublicServer(!!publicResult );
+      }
+
+      const privateResult = await healthCheckPrivateApi();
+      if (privateResult ) {
+        setCheckPrivateServer(!!privateResult );
       }
     };
 
@@ -34,7 +47,7 @@ const Home: NextPage = () => {
       const send = async (): Promise<void> => {
         try {
           setGenerating(true);
-          const response: string | undefined = await sendDataToApi(question);
+          const response: string | undefined = await sendDataToApi(question, model);
 
           if (response) {
             setCodeGenerated(response);
@@ -104,17 +117,29 @@ const Home: NextPage = () => {
                 />
               </a>
             </div>
-            {checkServer ? (
+            {checkPrivateServer ? (
               <p className="text-center text-green-400">
-                {"Server status: Online"}
+                {"Private server status: Online"}
               </p>
             ) : (
               <p className="text-center text-red-400">
-                {"Server status: Offline"}
+                {"Private server status: Offline"}
+              </p>
+            )}
+            {checkPublicServer ? (
+              <p className="text-center text-green-400">
+                {"Public server status: Online"}
+              </p>
+            ) : (
+              <p className="text-center text-red-400">
+                {"Public server status: Offline"}
               </p>
             )}
             <p className="text-center text-gray-500 dark:text-gray-400">
-              {INIT_DATA.serverInfo}
+              {INIT_DATA.serverPublicInfo}
+            </p>
+            <p className="text-center text-gray-500 dark:text-gray-400">
+              {INIT_DATA.serverPrivateInfo}
             </p>
           </div>
 
@@ -124,6 +149,20 @@ const Home: NextPage = () => {
                 <div className="flex items-center justify-between">
                   <h3 className="text-2xl font-bold">Your challenge</h3>
                   <div></div>
+<div className="h-full overflow-y-auto">
+                  <select
+                    id="model"
+                    className="w-full rounded-md bg-gray-800 px-3 py-2 font-mono text-sm focus:outline-none"
+                  >
+                  <option value="private" onClick={() => {
+                    setModel(Model.PRIVATE);
+                  }}>Private model</option>
+                  <option value="public" onClick={() => {
+                    setModel(Model.PUBLIC);
+                  }}>Public model</option>
+                  </select>
+                </div>
+
                 </div>
                 <div className="h-full overflow-y-auto">
                   <textarea
